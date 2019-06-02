@@ -316,6 +316,25 @@ NOTES
 --------------------------------------------------------------------------------
  */
 .notes {}
+
+/* Tablets portrait */
+@media (min-width: 768px) and (max-width: 1024px) {
+
+    .notes {
+        padding: 50px 75px 50px 75px;
+    }
+
+}
+
+/* Tablets landscape */
+@media (min-width: 768px) and (max-width: 1366px) and (orientation: landscape) {
+
+    .notes {
+        padding: 25px 200px 25px 200px;
+    }
+
+}
+
 .notes .note {
     border-bottom: 1px solid #eee;
     cursor: pointer;
@@ -358,6 +377,24 @@ NOTE EDITOR
     position: fixed;
     top: 48px;
     left: 0;
+}
+
+/* Tablets portrait */
+@media (min-width: 768px) and (max-width: 1024px) {
+
+    .note-editor {
+        padding: 68px 93px 68px 93px;
+    }
+
+}
+
+/* Tablets landscape */
+@media (min-width: 768px) and (max-width: 1366px) and (orientation: landscape) {
+
+    .note-editor {
+        padding: 43px 218px 43px 218px;
+    }
+
 }
 
 .note-editor.toolbar-opened {
@@ -584,6 +621,7 @@ LOADING
     display: flex;
     width: 100%;
     height: 100%;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background: #fff;
@@ -613,6 +651,10 @@ LOADING
     }
 }
 
+.loading .text {
+    margin-top: 50px;
+}
+
 
 /**
 --------------------------------------------------------------------------------
@@ -624,7 +666,7 @@ DEMO
     width: 100%;
     height: 100%;
     background: #3F80EC; /* red: E1413D, blue: 3F80EC */
-    z-index: 999;
+    z-index: 9999999;
     position: fixed;
     top: 0;
     left: 0;
@@ -639,13 +681,13 @@ DEMO
 }
 
 #demo .img {
-    width: calc(100% - 100px);
-    height: 80%;
-    background: url(resources/images/screen-2.png) no-repeat;
+    width: calc(100% - 125px);
+    height: 85%;
+    background: url(resources/images/screen-tablet-2.png) no-repeat;
     background-size: cover;
     box-shadow: 0px 5px 25px rgba(0,0,0,.25);
     border-radius: 25px;
     position: absolute;
-    margin-left: 50px;
+    margin-left: calc(125px / 2);
     bottom: 50px;
 }

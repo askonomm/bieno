@@ -25,6 +25,7 @@
 
 (defn app []
   (let [view @(rf/subscribe [::subscriptions/view])]
+    (prn "view: " view)
     (app-view view)))
 
 (defn- set-up []

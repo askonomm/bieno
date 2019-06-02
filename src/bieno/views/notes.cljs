@@ -22,7 +22,8 @@
                          [:div.note-content.note-formatting
                           {:dangerouslySetInnerHTML {:__html (if (empty? (get note :content)) "Empty note ..." (get note :content))}}]])]
         [:div.loading
-         [:div.icon]]))))
+         [:div.icon]
+         [:div.text "There's a whole lot of nothing here :("]]))))
 
 (defn- build-action []
   (action {:callback #(rf/dispatch [::events/create-note])
