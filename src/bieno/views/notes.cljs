@@ -21,8 +21,8 @@
            ^{:key note} [:div.note {:on-click #(rf/dispatch [::events/view-note (get note :id)])}
                          [:div.note-content.note-formatting
                           {:dangerouslySetInnerHTML {:__html (if (empty? (get note :content)) "Empty note ..." (get note :content))}}]])]
-        [:div.placeholder
-         [:div.no-notes]]))))
+        [:div.loading
+         [:div.icon]]))))
 
 (defn- build-action []
   (action {:callback #(rf/dispatch [::events/create-note])

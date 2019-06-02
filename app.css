@@ -481,6 +481,7 @@ ACTION
     box-shadow: 0px 3px 5px rgba(0,0,0,.25);
     border-radius: 100%;
     cursor: pointer;
+    z-index: 1000;
     position: fixed;
     right: 15px;
     bottom: 15px;
@@ -573,6 +574,45 @@ PLACEHOLDER
     margin-left: -18px;
     margin-right: -18px;
 }
+
+/**
+--------------------------------------------------------------------------------
+LOADING
+--------------------------------------------------------------------------------
+ */
+.loading {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    z-index: 999;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.loading .icon {
+    width: 50px;
+    height: 50px;
+    background: url(resources/images/icon/web_hi_res_512.png) no-repeat;
+    background-size: cover;
+    box-shadow: 0px 5px 25px rgba(0,0,0,.25);
+    border-radius: 100%;
+    -webkit-animation: scaling 0.5s infinite alternate;
+}
+
+@-webkit-keyframes scaling {
+    from {
+        -webkit-transform: scale(1.0);
+    }
+    to {
+        -webkit-transform: scale(1.25);
+        box-shadow: 0 0 30px #2868E4;
+    }
+}
+
 
 /**
 --------------------------------------------------------------------------------
