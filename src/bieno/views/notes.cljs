@@ -8,6 +8,7 @@
 
 (defn- build-header []
   (header {:title "Notes"
+           :separation true
            :buttons [{:callback #(rf/dispatch [::events/set-view :settings])
                       :icon "settings"
                       :left? true}]}))

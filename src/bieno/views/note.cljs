@@ -76,25 +76,25 @@
     (rf/dispatch [::events/set-note-content-in-storage {:id (get note :id)
                                                         :content content}])))
 
-(def delete-note-confirm-dialog-data {:title "Delete note"
-                                      :description "Are you sure you want to delete this note?"
-                                      :action-button-label "Yes, sure!"
-                                      :action-button-callback #(rf/dispatch [::events/delete-note])
-                                      :cancel-button-label "No, cancel!"
-                                      :cancel-button-callback #(rf/dispatch [::events/set-confirm-dialog-data {}])})
-
 (defn- build-header []
   (header {:title "Edit Note"
+           :separation true
            :buttons [{:callback #(rf/dispatch [::events/set-view :notes])
                       :icon "arrow_back"
                       :left? true}
-                     {:callback #(rf/dispatch [::events/set-confirm-dialog-data delete-note-confirm-dialog-data])
+                     {:callback #(rf/dispatch [::events/set-confirm-dialog-data {:title "Delete note"
+                                                                                 :description "Are you sure you want to delete this note?"
+                                                                                 :action-button-label "Yes, sure!"
+                                                                                 :action-button-callback (rf/dispatch [::events/delete-note])
+                                                                                 :cancel-button-label "No, cancel!"
+                                                                                 :cancel-button-callback (rf/dispatch [::events/set-confirm-dialog-data {}])}])
                       :icon "delete"}]}))
 
 (defn build-content []
   (let [note @(rf/subscribe [::subscriptions/note])
         toolbar-open? (get @state :toolbar-open?)]
     (content
+      {:class (if toolbar-open? "toolbar-opened" "")}
       [:div.note-editor.note-formatting {:class (if toolbar-open? "toolbar-opened" "")
                                          :content-editable true
                                          :auto-focus false

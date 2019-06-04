@@ -1,10 +1,11 @@
 (ns bieno.partials
   (:require [bieno.utils :as utils]))
 
-(defn header [{:keys [title buttons]}]
+(defn header [{:keys [title separation buttons]}]
   (let [left-button (utils/find-in-collection #(= (:left? %) true) buttons)
         buttons (if left-button (utils/remove-from-collection #(= (:left? %) true) buttons) buttons)]
     [:div.header
+     {:class (when separation "separated")}
      [:div.header-container
       [:div.header-main
        (when left-button

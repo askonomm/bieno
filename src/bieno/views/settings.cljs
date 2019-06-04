@@ -5,7 +5,8 @@
             [bieno.partials :refer [header content]]))
 
 (defn- build-header []
-  (header {:title   "Settings"
+  (header {:title "Settings"
+           :separation true
            :buttons [{:callback #(rf/dispatch [::events/set-view :notes])
                       :icon "arrow_back"
                       :left? true}]}))
