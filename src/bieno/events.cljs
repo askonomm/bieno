@@ -8,6 +8,8 @@
   (fn [_ _]
     {:view :notes
      :confirm-dialog-data {}
+     :scroll-from-top 0
+     :screen-width 0
      :note-id nil
      :note nil
      :notes []}))
@@ -49,7 +51,8 @@
   ::view-note
   (fn [cofx [_ note-id]]
     {:dispatch-n [[::set-note-id note-id]
-                  [::set-view :note]]}))
+                  [::set-view :note]
+                  [::set-scroll-from-top 0]]}))
 
 (rf/reg-event-fx
   ::get-note-to-state
@@ -93,3 +96,13 @@
        :dispatch-n [[::set-note-id nil]
                     [::set-view :notes]
                     [::set-confirm-dialog-data {}]]})))
+
+(rf/reg-event-fx
+  ::set-scroll-from-top
+  (fn [cofx [_ value]]
+    {:db (assoc (get cofx :db) :scroll-from-top value)}))
+
+(rf/reg-event-fx
+  ::set-screen-width
+  (fn [cofx [_ value]]
+    {:db (assoc (get cofx :db) :screen-width value)}))

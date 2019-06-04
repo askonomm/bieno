@@ -11,6 +11,13 @@
 (def state (r/atom {:toolbar-open? false
                     :parent-node nil}))
 
+(def delete-note-confirm-dialog-data {:title "Delete note"
+                                      :description "Are you sure you want to delete this note?"
+                                      :action-button-label "Yes, sure!"
+                                      :action-button-callback #(rf/dispatch [::events/delete-note])
+                                      :cancel-button-label "No, cancel!"
+                                      :cancel-button-callback #(rf/dispatch [::events/set-confirm-dialog-data {}])})
+
 (defn- set-parent-node-to-state []
   "Sets the parent node of the current selection to state"
   (let [selection (.getSelection js/window)
@@ -76,25 +83,29 @@
     (rf/dispatch [::events/set-note-content-in-storage {:id (get note :id)
                                                         :content content}])))
 
-(def delete-note-confirm-dialog-data {:title "Delete note"
-                                      :description "Are you sure you want to delete this note?"
-                                      :action-button-label "Yes, sure!"
-                                      :action-button-callback #(rf/dispatch [::events/delete-note])
-                                      :cancel-button-label "No, cancel!"
-                                      :cancel-button-callback #(rf/dispatch [::events/set-confirm-dialog-data {}])})
-
 (defn- build-header []
-  (header {:title "Edit Note"
-           :buttons [{:callback #(rf/dispatch [::events/set-view :notes])
-                      :icon "arrow_back"
-                      :left? true}
-                     {:callback #(rf/dispatch [::events/set-confirm-dialog-data delete-note-confirm-dialog-data])
-                      :icon "delete"}]}))
+  (let [scroll-from-top @(rf/subscribe [::subscriptions/scroll-from-top])]
+    (header {:title "Edit Note"
+             :shadow (when-not (= 0 scroll-from-top) true)
+             :separation true
+             :buttons [{:callback #(rf/dispatch [::events/set-view :notes])
+                        :icon "arrow_back"
+                        :left? true}
+                       {:callback #(rf/dispatch [::events/set-confirm-dialog-data delete-note-confirm-dialog-data])
+                        :icon "delete"}]})))
 
-(defn build-content []
+(defn- build-content->did-mount []
+  (let [mobile? @(rf/subscribe [::subscriptions/mobile-device?])]
+    (set!
+      (.-onscroll (.querySelector js/document (if mobile? ".note-editor" ".content")))
+      (fn [event]
+        (rf/dispatch [::events/set-scroll-from-top (.. event -target -scrollTop)])))))
+
+(defn build-content->render []
   (let [note @(rf/subscribe [::subscriptions/note])
         toolbar-open? (get @state :toolbar-open?)]
     (content
+      {:class (if toolbar-open? "toolbar-opened" "")}
       [:div.note-editor.note-formatting {:class (if toolbar-open? "toolbar-opened" "")
                                          :content-editable true
                                          :auto-focus false
@@ -105,6 +116,12 @@
                                          :on-blur #(swap! state assoc :toolbar-open? false)
                                          :placeholder "Your note goes here ..."
                                          :dangerouslySetInnerHTML {:__html (get note :content)}}])))
+
+(defn build-content []
+  (r/create-class
+    {:component-name "build-content"
+     :component-did-mount (fn [] (build-content->did-mount))
+     :reagent-render (fn [] (build-content->render))}))
 
 (defn build-toolbar []
   (let [toolbar-open? (get @state :toolbar-open?)
@@ -150,5 +167,5 @@
         (confirm {:data confirm-dialog
                   :on-close-callback #(rf/dispatch [::events/set-confirm-dialog-data {}])}))
       (build-header)
-      (build-content)
+      [build-content]
       (build-toolbar))))
