@@ -31,3 +31,18 @@
       (if-not (empty? confirm-dialog-data)
         confirm-dialog-data
         nil))))
+
+(rf/reg-sub
+  ::scroll-from-top
+  (fn [db _]
+    (get db :scroll-from-top)))
+
+(rf/reg-sub
+  ::screen-width
+  (fn [db _]
+    (get db :screen-width)))
+
+(rf/reg-sub
+  ::mobile-device?
+  (fn [db _]
+    (< (get db :screen-width) 650)))

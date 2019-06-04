@@ -239,6 +239,7 @@ HEADER BAR
     left: 0;
 }
 
+
 @media (min-width: 650px) {
 
     .header {
@@ -249,6 +250,10 @@ HEADER BAR
 
 .header.separated {
     border-bottom: 1px solid #e5e5e5;
+}
+
+.header.with-shadow {
+    box-shadow: 0 1px 10px rgba(0,0,0,.075);
 }
 
 .header-container {}
@@ -331,7 +336,7 @@ NOTES
         margin-top: 25px;
         margin-left: auto;
         margin-right: auto;
-        margin-bottom: 25px;
+        margin-bottom: 40px;
     }
 
 }
@@ -517,6 +522,11 @@ NOTE FORMATTING
 .note-formatting b {
     font-weight: 700;
     color: #111;
+}
+
+.note-formatting strike,
+.note-formatting s {
+    opacity: .75;
 }
 
 .note-formatting ul {
