@@ -11,3 +11,4 @@ pom.xml.asc
 .hg/
 app.js
 app.min.js
+index.html
