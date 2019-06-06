@@ -22,8 +22,6 @@
 (rf/reg-event-fx
   ::set-view
   (fn [cofx [_ view]]
-    (storage/set-item {:name :view
-                       :value view})
     {:db (assoc (get cofx :db) :view view)}))
 
 (rf/reg-event-fx
