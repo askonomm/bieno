@@ -5,7 +5,6 @@
             [bieno.subscriptions :as subscriptions]
             [bieno.partials :as partials :refer [header content confirm]]
             [bieno.utils :as utils]
-            [bieno.editor :as editor]
             [bieno.storage :as storage]))
 
 (def state (r/atom {:toolbar-open? false}))
@@ -104,8 +103,8 @@
 (defn build-content []
   (r/create-class
     {:component-name "build-content"
-     :component-did-mount (fn [] (build-content->did-mount))
-     :reagent-render (fn [] (build-content->render))}))
+     :component-did-mount #(build-content->did-mount)
+     :reagent-render #(build-content->render)}))
 
 (defn build-toolbar []
   (let [toolbar-open? (get @state :toolbar-open?)]

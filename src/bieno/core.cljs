@@ -29,8 +29,7 @@
 
 (defn- set-up []
   (utils/listen-for-viewport-change (fn [screen-width] (rf/dispatch [::events/set-screen-width screen-width])))
-  (utils/disable-back-button {:current-view (rf/subscribe [::subscriptions/view])
-                              :callback #(rf/dispatch [::events/set-view :notes])})
+  (utils/disable-back-button {:current-view (rf/subscribe [::subscriptions/view]) :callback #(rf/dispatch [::events/set-view :notes])})
   (utils/disable-formatted-paste)
   (utils/overwrite-checkbox-behaviour))
 
