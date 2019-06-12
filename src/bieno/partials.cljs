@@ -27,6 +27,9 @@
 (defn content [& content]
   (into [:div.content] content))
 
+(defn content-with-search [& content]
+  (into [:div.content.with-search] content))
+
 (defn action [{:keys [callback icon]}]
   [:div.action {:on-click callback}
    [:i.material-icons icon]])

@@ -5,11 +5,9 @@
             [bieno.subscriptions :as subscriptions]
             [bieno.partials :as partials :refer [header content confirm]]
             [bieno.utils :as utils]
-            [bieno.editor :as editor]
             [bieno.storage :as storage]))
 
-(def state (r/atom {:toolbar-open? false
-                    :parent-node nil}))
+(def state (r/atom {:toolbar-open? false}))
 
 (def delete-note-confirm-dialog-data {:title "Delete note"
                                       :description "Are you sure you want to delete this note?"
@@ -18,37 +16,23 @@
                                       :cancel-button-label "No, cancel!"
                                       :cancel-button-callback #(rf/dispatch [::events/set-confirm-dialog-data {}])})
 
-(defn- set-parent-node-to-state []
-  "Sets the parent node of the current selection to state"
-  (let [selection (.getSelection js/window)
-        anchor-node (.-anchorNode selection)
-        parent-element (when anchor-node (.-parentElement anchor-node))
-        tag-name (when parent-element (.-tagName parent-element))]
-    (when tag-name
-      (swap! state assoc :parent-node tag-name))))
-
 (defn- format-selection->title []
   "Formats the current selection as title"
   (if (= "H1" (get @state :parent-node))
-    (do (.execCommand js/document "formatblock" false "div")
-        (swap! state assoc :parent-node nil))
-    (do (.execCommand js/document "formatblock" false "h1")
-        (swap! state assoc :parent-node "H1"))))
+    (.execCommand js/document "formatblock" false "div")
+    (.execCommand js/document "formatblock" false "h1")))
 
 (defn- format-selection->bold []
   "Formats the current selection as bold"
-  (do (.execCommand js/document "bold" false "")
-      (swap! state assoc :parent-node "STRONG")))
+  (.execCommand js/document "bold" false ""))
 
 (defn- format-selection->italic []
   "Formats the current selection as italic"
-  (do (.execCommand js/document "italic" false "")
-      (swap! state assoc :parent-node "EM")))
+  (.execCommand js/document "italic" false ""))
 
 (defn- format-selection->strikethrough []
   "Formats the current selection as strikethrough"
-  (do (.execCommand js/document "strikethrough" false "")
-      (swap! state assoc :parent-node "STRIKE")))
+  (.execCommand js/document "strikethrough" false ""))
 
 (defn- format-selection->unordered-list []
   "Formats the current selection as unordered list"
@@ -110,7 +94,6 @@
                                          :content-editable true
                                          :auto-focus false
                                          :tab-index -1
-                                         :on-click #(set-parent-node-to-state)
                                          :on-focus #(swap! state assoc :toolbar-open? true)
                                          :on-input #(update-note-content)
                                          :on-blur #(swap! state assoc :toolbar-open? false)
@@ -120,30 +103,25 @@
 (defn build-content []
   (r/create-class
     {:component-name "build-content"
-     :component-did-mount (fn [] (build-content->did-mount))
-     :reagent-render (fn [] (build-content->render))}))
+     :component-did-mount #(build-content->did-mount)
+     :reagent-render #(build-content->render)}))
 
 (defn build-toolbar []
-  (let [toolbar-open? (get @state :toolbar-open?)
-        parent-node (get @state :parent-node)]
+  (let [toolbar-open? (get @state :toolbar-open?)]
     (when toolbar-open?
       [:div.note-toolbar
        [:ul
         [:li
-         {:class (when (= "H1" parent-node) "active")
-          :on-mouse-down #(format-selection :title %)}
+         {:on-mouse-down #(format-selection :title %)}
          [:i.material-icons "title"]]
         [:li
-         {:class (when (or (= "STRONG" parent-node) (= "B" parent-node)) "active")
-          :on-mouse-down #(format-selection :bold %)}
+         {:on-mouse-down #(format-selection :bold %)}
          [:i.material-icons "format_bold"]]
         [:li
-         {:class (when (or (= "EM" parent-node) (= "I" parent-node)) "active")
-          :on-mouse-down #(format-selection :italic %)}
+         {:on-mouse-down #(format-selection :italic %)}
          [:i.material-icons "format_italic"]]
         [:li
-         {:class (when (or (= "STRIKE" parent-node) (= "S" parent-node)) "active")
-          :on-mouse-down #(format-selection :strikethrough %)}
+         {:on-mouse-down #(format-selection :strikethrough %)}
          [:i.material-icons "strikethrough_s"]]
         [:li
          {:on-mouse-down #(format-selection :unordered-list %)}
