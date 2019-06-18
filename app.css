@@ -220,6 +220,12 @@ body {
     background: #fff;
 }
 
+input, textarea, select {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: #555;
+}
+
 [contenteditable=true]:empty:before {
     content: attr(placeholder);
     display: block; /* For Firefox */
@@ -232,23 +238,25 @@ HEADER BAR
  */
 .header {
     width: 100%;
-    background: #fff;
-    box-shadow: 0 1px 10px rgba(0,0,0,.075);
-    border-bottom: 1px solid #eee;
+    background: #fbfbfb;
     z-index: 10;
     position: fixed;
     top: 0;
     left: 0;
 }
 
+.header.separated {
+    border-bottom: 1px solid #ebebeb;
+}
+
+.header.with-shadow {
+    box-shadow: 0 1px 10px rgba(0,0,0,.05);
+}
+
 .header-container {}
 
 .header-main {
     height: 48px;
-}
-
-.header-main.separated {
-    border-bottom: 1px solid #eee;
 }
 
 .header-main .left-action-btn {
@@ -310,16 +318,82 @@ CONTENT
     left: 0;
 }
 
+.content.with-search {
+    height: calc(100% - 144px);
+    top: 144px;
+}
+
+/**
+--------------------------------------------------------------------------------
+SEARCH
+--------------------------------------------------------------------------------
+ */
+.search {
+    width: 100%;
+    height: 96px;
+    background: #fbfbfb;
+    border-bottom: 1px solid #ebebeb;
+    position: fixed;
+    z-index: 100;
+    top: 48px;
+}
+
+.search input {
+    width: calc(100% - 36px);
+    height: 60px;
+    font-size: 20px;
+    font-weight: 300;
+    color: #111;
+    outline: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    background: transparent;
+    border: 0;
+    top: 10px;
+    margin-left: 18px;
+}
+
+.search.with-shadow {
+    box-shadow: 0 10px 10px rgba(0,0,0,.05)
+}
+
 /**
 --------------------------------------------------------------------------------
 NOTES
 --------------------------------------------------------------------------------
  */
-.notes {}
+.notes {
+}
+
+@media (min-width: 650px) {
+
+    .notes {
+        width: 650px;
+        margin-top: 25px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 40px;
+    }
+
+}
+
 .notes .note {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #ebebeb;
     cursor: pointer;
     padding: 18px;
+}
+
+@media (min-width: 650px) {
+
+    .notes .note {
+        padding: 25px 18px 25px 18px;
+    }
+
+    .notes .note:first-child {
+        padding-top: 18px;
+    }
+
 }
 
 .notes .note:last-child {
@@ -327,7 +401,7 @@ NOTES
 }
 
 .notes .note-content {
-    height: 150px;
+    max-height: 150px;
     text-overflow: ellipsis;
     overflow: hidden;
 }
@@ -336,13 +410,43 @@ NOTES
     display: block;
     content: '';
     width: 100%;
-    height: 150px;
+    height: 100%;
     background: linear-gradient(transparent, #fff);
     z-index: 1;
     position: absolute;
     top: 0;
     left: 0;
 }
+
+.notes .note-content h1 {
+    font-size: 15px !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 10px;
+}
+
+@media all and (min-width: 650px) {
+
+    .notes .note-content h1 {
+        font-size: 21px !important;
+    }
+
+}
+
+.notes .note-content h1:first-child {
+    font-size: 17px;
+}
+
+.notes .note-content h1:first-child:after {
+    display: none !important;
+}
+
+@media all and (max-width: 650px) {
+
+    .notes .note-content input {
+        margin-left: 1px;
+    }
+}
+
 
 /**
 --------------------------------------------------------------------------------
@@ -360,8 +464,41 @@ NOTE EDITOR
     left: 0;
 }
 
+
+@media (min-width: 650px) {
+
+    .note-editor {
+        width: 650px;
+        height: auto;
+        min-height: 100%;
+        position: relative;
+        padding-top: 43px;
+        padding-bottom: 43px;
+        margin-left: auto;
+        margin-right: auto;
+        top: 0;
+    }
+
+}
+
 .note-editor.toolbar-opened {
     height: calc(100% - 96px);
+}
+
+@media (min-width: 650px) {
+
+    .note-editor.toolbar-opened {
+        height: auto;
+    }
+
+}
+
+@media (min-width: 650px) {
+
+    .content.toolbar-opened {
+        height: calc(100% - 96px);
+    }
+
 }
 
 /**
@@ -370,22 +507,78 @@ NOTE FORMATTING
 --------------------------------------------------------------------------------
  */
 .note-formatting {
-    line-height: 1.5;
-    font-size: 14px;
-    color: #555;
+    line-height: 1.57059;
+    font-size: 15px;
+    color: #595959;
+    letter-spacing: -.022em;
+}
+
+@media all and (min-width: 650px) {
+
+    .note-formatting {
+        font-size: 17px;
+    }
+
 }
 
 .note-formatting h1 {
+    line-height: 1.38365;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 500;
     color: #111;
-    margin-bottom: 10px;
+    letter-spacing: -.003em;
+    margin-bottom: 20px;
+}
+
+@media all and (min-width: 650px) {
+
+    .note-formatting h1 {
+        font-size: 20px;
+        padding-right: 150px;
+    }
+
+}
+
+.note-formatting h1:first-child {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.note-formatting h1:first-child:after {
+    display: none;
+    content: '';
+    width: 25px;
+    height: 1px;
+    background: #111;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+@media all and (min-width: 650px) {
+
+    .note-formatting h1:first-child {
+        font-size: 24px;
+    }
+
+    .note-formatting h1:first-child:after {
+        display: block;
+        width: 50px;
+        height: 2px;
+        margin-top: 15px;
+        margin-bottom: 40px;
+    }
+
 }
 
 .note-formatting strong,
 .note-formatting b {
     font-weight: 700;
     color: #111;
+}
+
+.note-formatting strike,
+.note-formatting s {
+    opacity: .75;
 }
 
 .note-formatting ul {
@@ -409,25 +602,26 @@ NOTE FORMATTING
     width: 24px;
     height: 24px;
     vertical-align: middle;
-    margin-left: -2px;
     margin-right: 2px;
 }
 
 .note-formatting input:before {
     display: inline-block;
-    content: ' ';
+    font-family: "Material Icons";
+    content: '\e836';
     width: 25px;
     height: 25px;
-    background: url(resources/images/checkbox.svg) #fff no-repeat;
+    font-size: 24px;
+    background: #fff;
     background-size: 100% 100%;
+    cursor: pointer;
     position: relative;
     top: -1px;
     left: -1px;
 }
 
 .note-formatting input[checked="checked"]:before {
-    background: url(resources/images/checkbox-checked.svg) #fff no-repeat;
-    background-size: 100% 100%;
+    content: '\e86c';
 }
 
 /**
@@ -438,8 +632,8 @@ NOTE TOOLBAR
 .note-toolbar {
     width: 100%;
     height: 48px;
-    background: #111;
-    box-shadow: 0 0 15px rgba(0,0,0,.15);
+    background: #fff;
+    border-top: 1px solid #ebebeb;
     position: fixed;
     left: 0;
     bottom: 0;
@@ -451,15 +645,23 @@ NOTE TOOLBAR
     align-items: center;
 }
 
+@media (min-width: 650px) {
+
+    .note-toolbar ul {
+        width: 650px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+}
+
+
 .note-toolbar ul li {
     width: 50px;
     height: 48px;
-    color: #999;
+    color: #111;
     text-align: center;
-}
-
-.note-toolbar ul li.active {
-    color: #fff;
+    cursor: pointer;
 }
 
 .note-toolbar ul li i {
@@ -513,6 +715,7 @@ CONFIRM DIALOG
 }
 
 .confirm h2 {
+    line-height: 1;
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 15px;
@@ -584,6 +787,7 @@ LOADING
     display: flex;
     width: 100%;
     height: 100%;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     background: #fff;
@@ -594,8 +798,8 @@ LOADING
 }
 
 .loading .icon {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     background: url(resources/images/icon/web_hi_res_512.png) no-repeat;
     background-size: cover;
     box-shadow: 0px 5px 25px rgba(0,0,0,.25);
@@ -609,8 +813,12 @@ LOADING
     }
     to {
         -webkit-transform: scale(1.25);
-        box-shadow: 0 0 30px #2868E4;
+        box-shadow: 0 0 50px rgba(0,0,0,.5);
     }
+}
+
+.loading .text {
+    margin-top: 50px;
 }
 
 
@@ -624,7 +832,7 @@ DEMO
     width: 100%;
     height: 100%;
     background: #3F80EC; /* red: E1413D, blue: 3F80EC */
-    z-index: 999;
+    z-index: 9999999;
     position: fixed;
     top: 0;
     left: 0;
@@ -639,13 +847,13 @@ DEMO
 }
 
 #demo .img {
-    width: calc(100% - 100px);
-    height: 80%;
-    background: url(resources/images/screen-2.png) no-repeat;
+    width: calc(100% - 125px);
+    height: 85%;
+    background: url(resources/images/screen-tablet-2.png) no-repeat;
     background-size: cover;
     box-shadow: 0px 5px 25px rgba(0,0,0,.25);
     border-radius: 25px;
     position: absolute;
-    margin-left: 50px;
+    margin-left: calc(125px / 2);
     bottom: 50px;
 }

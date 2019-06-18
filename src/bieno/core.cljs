@@ -28,7 +28,8 @@
     (app-view view)))
 
 (defn- set-up []
-  (utils/disable-back-button (rf/dispatch [::events/set-view :notes]))
+  (utils/listen-for-viewport-change (fn [screen-width] (rf/dispatch [::events/set-screen-width screen-width])))
+  (utils/disable-back-button {:current-view (rf/subscribe [::subscriptions/view]) :callback #(rf/dispatch [::events/set-view :notes])})
   (utils/disable-formatted-paste)
   (utils/overwrite-checkbox-behaviour))
 
@@ -37,8 +38,4 @@
   (rf/dispatch-sync [::events/initialize])
   (storage/init {:name :notes
                  :type :json})
-  (storage/init {:name :note-id
-                 :type :string})
-  (storage/init {:name :view
-                 :type :keyword})
   (r/render [app] (js/document.getElementById "app")))

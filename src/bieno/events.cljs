@@ -8,9 +8,13 @@
   (fn [_ _]
     {:view :notes
      :confirm-dialog-data {}
+     :scroll-from-top 0
+     :screen-width 0
+     :search-visibility? nil
      :note-id nil
      :note nil
-     :notes []}))
+     :notes []
+     :notes-filtered nil}))
 
 (rf/reg-event-fx
   ::initialize-data
@@ -20,9 +24,10 @@
 (rf/reg-event-fx
   ::set-view
   (fn [cofx [_ view]]
-    (storage/set-item {:name :view
-                       :value view})
-    {:db (assoc (get cofx :db) :view view)}))
+    {:db (assoc (get cofx :db) :view view)
+     :dispatch-n [(when (= :notes view)
+                    [::clear-filtered-notes]
+                    [::close-search])]}))
 
 (rf/reg-event-fx
   ::set-confirm-dialog-data
@@ -49,7 +54,8 @@
   ::view-note
   (fn [cofx [_ note-id]]
     {:dispatch-n [[::set-note-id note-id]
-                  [::set-view :note]]}))
+                  [::set-view :note]
+                  [::set-scroll-from-top 0]]}))
 
 (rf/reg-event-fx
   ::get-note-to-state
@@ -93,3 +99,46 @@
        :dispatch-n [[::set-note-id nil]
                     [::set-view :notes]
                     [::set-confirm-dialog-data {}]]})))
+
+(rf/reg-event-fx
+  ::set-scroll-from-top
+  (fn [cofx [_ value]]
+    {:db (assoc (get cofx :db) :scroll-from-top value)}))
+
+(rf/reg-event-fx
+  ::set-screen-width
+  (fn [cofx [_ value]]
+    {:db (assoc (get cofx :db) :screen-width value)}))
+
+(rf/reg-event-fx
+  ::open-search
+  (fn [cofx _]
+    {:db (assoc (get cofx :db) :search-visibility? true)}))
+
+(rf/reg-event-fx
+  ::close-search
+  (fn [cofx _]
+    {:db (assoc (get cofx :db) :search-visibility? nil)}))
+
+(rf/reg-event-fx
+  ::toggle-search
+  (fn [cofx _]
+    (if (get-in cofx [:db :search-visibility?])
+      {:db (assoc (get cofx :db) :search-visibility? nil)
+       :dispatch [::clear-filtered-notes]}
+      {:db (assoc (get cofx :db) :search-visibility? true)})))
+
+(rf/reg-event-fx
+  ::clear-filtered-notes
+  (fn [cofx _]
+    {:db (assoc (get cofx :db) :notes-filtered nil)}))
+
+(rf/reg-event-fx
+  ::search
+  (fn [cofx [_ search]]
+    (let [notes (get-in cofx [:db :notes])
+          notes-filtered (utils/remove-from-collection nil? (vec (for [note notes]
+                                                                   (when (clojure.string/includes? (get note :content) search)
+                                                                     note))))]
+      {:db (assoc (get cofx :db) :notes-filtered notes-filtered)})))
+

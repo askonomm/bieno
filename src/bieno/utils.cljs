@@ -36,13 +36,21 @@
                               (into (empty coll)))
       :default coll)))
 
-(defn disable-back-button [callback]
+(defn listen-for-viewport-change [callback]
+  (callback (.-innerWidth js/window))
+  (set!
+   (.-onresize js/window)
+   (fn [event]
+     (callback (.-innerWidth js/window)))))
+
+(defn disable-back-button [{:keys [current-view callback]}]
   "Since we do not use a router and instead keep the current view in state, we have no use for a back button.
   Instead, if a back button event is detected, we should direct the user to the default view."
   (.pushState js/history nil (.-title js/document) (.-href js/location))
   (.addEventListener js/window "popstate" (fn [event]
-                                            (callback)
-                                            (.pushState js/history nil (.-title js/document) (.-href js/location)))))
+                                            (when (= :note @current-view)
+                                              (callback)
+                                              (.pushState js/history nil (.-title js/document) (.-href js/location))))))
 
 (defn disable-formatted-paste []
   "Filters paste data so that whatever the user pastes into the contentEditable DOM element is pasted as plain text

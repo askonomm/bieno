@@ -25,9 +25,34 @@
     (get db :notes)))
 
 (rf/reg-sub
+  ::notes-filtered
+  (fn [db _]
+    (get db :notes-filtered)))
+
+(rf/reg-sub
   ::confirm-dialog
   (fn [db _]
     (let [confirm-dialog-data (get db :confirm-dialog-data)]
       (if-not (empty? confirm-dialog-data)
         confirm-dialog-data
         nil))))
+
+(rf/reg-sub
+  ::scroll-from-top
+  (fn [db _]
+    (get db :scroll-from-top)))
+
+(rf/reg-sub
+  ::screen-width
+  (fn [db _]
+    (get db :screen-width)))
+
+(rf/reg-sub
+  ::mobile-device?
+  (fn [db _]
+    (< (get db :screen-width) 650)))
+
+(rf/reg-sub
+  ::search-visible?
+  (fn [db _]
+    (get db :search-visibility?)))

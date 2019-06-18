@@ -1,10 +1,13 @@
 (ns bieno.partials
   (:require [bieno.utils :as utils]))
 
-(defn header [{:keys [title buttons]}]
+(defn header [{:keys [title shadow separation buttons]}]
   (let [left-button (utils/find-in-collection #(= (:left? %) true) buttons)
-        buttons (if left-button (utils/remove-from-collection #(= (:left? %) true) buttons) buttons)]
+        buttons (if left-button (utils/remove-from-collection #(= (:left? %) true) buttons) buttons)
+        class (if separation "separated" "")
+        class (if (and separation shadow) "separated with-shadow" class)]
     [:div.header
+     {:class class}
      [:div.header-container
       [:div.header-main
        (when left-button
@@ -23,6 +26,9 @@
 
 (defn content [& content]
   (into [:div.content] content))
+
+(defn content-with-search [& content]
+  (into [:div.content.with-search] content))
 
 (defn action [{:keys [callback icon]}]
   [:div.action {:on-click callback}
